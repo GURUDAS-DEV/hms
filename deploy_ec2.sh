@@ -85,11 +85,12 @@ sudo docker compose exec -T backend bench --site frontend migrate || true
 echo "Copying Orus Healthcare logos..."
 sudo docker compose cp orus_logo.svg backend:/home/frappe/frappe-bench/sites/frontend/public/files/orus_logo.svg
 sudo docker compose cp orus_favicon.svg backend:/home/frappe/frappe-bench/sites/frontend/public/files/orus_favicon.svg
+sudo docker compose cp apply_branding.py backend:/home/frappe/frappe-bench/apps/frappe/frappe/apply_branding.py
 sudo docker compose cp apply_branding.py backend:/home/frappe/frappe-bench/apps/erpnext/erpnext/apply_branding.py
 
 # 8. Apply Orus Healthcare Branding & Activate Healthcare Domain
 echo "Applying Orus Healthcare branding and activating Healthcare domain..."
-sudo docker compose exec -T backend bench --site frontend execute erpnext.apply_branding.run
+sudo docker compose exec -T backend bench --site frontend execute frappe.apply_branding.run
 sudo docker compose exec -T backend bench --site frontend clear-cache
 
 # 9. Restart web frontend to refresh assets
