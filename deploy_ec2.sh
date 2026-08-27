@@ -74,19 +74,22 @@ echo -e "\n✅ Site initialized."
 
 # 6. Install Healthcare App
 echo "Installing Healthcare App..."
-sudo docker compose exec -T backend bench get-app healthcare --branch version-15 || true
-sudo docker compose exec -T backend python -m pip install -e /home/frappe/frappe-bench/apps/healthcare
-sudo docker compose exec -T backend bench --site frontend migrate
+if [ ! -d "/home/frappe/frappe-bench/apps/healthcare" ]; then
+    sudo docker compose exec -T backend bench get-app healthcare --branch version-15 || true
+fi
+sudo docker compose exec -T backend python -m pip install -e /home/frappe/frappe-bench/apps/healthcare || true
+sudo docker compose exec -T backend /home/frappe/frappe-bench/env/bin/python -m pip install -e /home/frappe/frappe-bench/apps/healthcare || true
+sudo docker compose exec -T backend bench --site frontend migrate || true
 
 # 7. Copy Orus Healthcare Logos & Favicon
 echo "Copying Orus Healthcare logos..."
 sudo docker compose cp orus_logo.svg backend:/home/frappe/frappe-bench/sites/frontend/public/files/orus_logo.svg
 sudo docker compose cp orus_favicon.svg backend:/home/frappe/frappe-bench/sites/frontend/public/files/orus_favicon.svg
-sudo docker compose cp apply_branding.py backend:/home/frappe/frappe-bench/apps/healthcare/healthcare/apply_branding.py
+sudo docker compose cp apply_branding.py backend:/home/frappe/frappe-bench/apps/erpnext/erpnext/apply_branding.py
 
 # 8. Apply Orus Healthcare Branding & Activate Healthcare Domain
 echo "Applying Orus Healthcare branding and activating Healthcare domain..."
-sudo docker compose exec -T backend bench --site frontend execute healthcare.apply_branding.run
+sudo docker compose exec -T backend bench --site frontend execute erpnext.apply_branding.run
 sudo docker compose exec -T backend bench --site frontend clear-cache
 
 # 9. Restart web frontend to refresh assets
