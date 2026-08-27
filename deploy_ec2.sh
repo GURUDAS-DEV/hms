@@ -26,8 +26,8 @@ if ! command -v docker &> /dev/null || ! docker compose version &> /dev/null; th
     echo "Detecting OS and Installing Docker & Docker Compose..."
     if command -v dnf &> /dev/null; then
         # Amazon Linux 2023 / Fedora / RHEL 9
-        sudo dnf update -y
-        sudo dnf install -y docker git curl
+        sudo dnf update -y --allowerasing || sudo dnf update -y
+        sudo dnf install -y --allowerasing docker git || sudo dnf install -y docker git
         sudo systemctl enable --now docker
         sudo usermod -aG docker $USER || true
         # Install Docker Compose Plugin
@@ -37,7 +37,7 @@ if ! command -v docker &> /dev/null || ! docker compose version &> /dev/null; th
     elif command -v yum &> /dev/null; then
         # Amazon Linux 2 / CentOS 7
         sudo yum update -y
-        sudo yum install -y docker git curl
+        sudo yum install -y docker git
         sudo systemctl enable --now docker
         sudo usermod -aG docker $USER || true
         # Install Docker Compose Plugin
