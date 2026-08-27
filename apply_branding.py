@@ -1,7 +1,7 @@
 import frappe
 
 def run():
-    print("Applying Orus Healthcare branding...")
+    print("Applying Orus Healthcare branding and configuring workspaces...")
     
     # 0. Ensure Domain Healthcare exists and is active in database
     try:
@@ -53,7 +53,25 @@ def run():
     except Exception as e:
         print(f"Website Settings note: {e}")
     
-    # 3. Navbar Settings (Hide all frappe external links)
+    # 3. Clean Sidebar Workspaces (Hide non-healthcare clutter)
+    try:
+        workspaces_to_hide = [
+            'Manufacturing', 'Quality', 'Projects', 'Buying', 'Selling', 
+            'Stock', 'Assets', 'CRM', 'ERPNext Integrations', 'Support', 
+            'Integrations', 'Build', 'Tools', 'Website'
+        ]
+        for ws in workspaces_to_hide:
+            if frappe.db.exists("Workspace", ws):
+                frappe.db.set_value("Workspace", ws, "is_hidden", 1)
+                
+        # Make sure Healthcare workspace is visible and active
+        if frappe.db.exists("Workspace", "Healthcare"):
+            frappe.db.set_value("Workspace", "Healthcare", "is_hidden", 0)
+            frappe.db.set_value("Workspace", "Healthcare", "public", 1)
+    except Exception as e:
+        print(f"Workspace customization note: {e}")
+    
+    # 4. Navbar Settings (Hide all frappe external links)
     try:
         nav_doc = frappe.get_doc("Navbar Settings")
         for item in (nav_doc.help_dropdown or []):
@@ -64,10 +82,10 @@ def run():
     except Exception as e:
         print(f"Navbar note: {e}")
 
-    # 4. Clear cache and commit
+    # 5. Clear cache and commit
     frappe.db.commit()
     frappe.clear_cache()
-    print("✅ All Orus Healthcare branding and domains applied cleanly!")
+    print("✅ All Orus Healthcare branding, Healthcare workspace, and clean sidebar applied!")
 
 if __name__ == "__main__":
     run()

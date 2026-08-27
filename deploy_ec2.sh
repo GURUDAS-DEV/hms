@@ -73,12 +73,13 @@ done
 echo -e "\n✅ Site initialized."
 
 # 6. Install Healthcare App
-echo "Installing Healthcare App..."
+echo "Installing Healthcare App on Site..."
 if [ ! -d "/home/frappe/frappe-bench/apps/healthcare" ]; then
     sudo docker compose exec -T backend bench get-app healthcare --branch version-15 || true
 fi
 sudo docker compose exec -T backend python -m pip install -e /home/frappe/frappe-bench/apps/healthcare || true
 sudo docker compose exec -T backend /home/frappe/frappe-bench/env/bin/python -m pip install -e /home/frappe/frappe-bench/apps/healthcare || true
+sudo docker compose exec -T backend bench --site frontend install-app healthcare || true
 sudo docker compose exec -T backend bench --site frontend migrate || true
 
 # 7. Copy Orus Healthcare Logos & Favicon
@@ -89,7 +90,7 @@ sudo docker compose cp apply_branding.py backend:/home/frappe/frappe-bench/apps/
 sudo docker compose cp apply_branding.py backend:/home/frappe/frappe-bench/apps/erpnext/erpnext/apply_branding.py
 
 # 8. Apply Orus Healthcare Branding & Activate Healthcare Domain
-echo "Applying Orus Healthcare branding and activating Healthcare domain..."
+echo "Applying Orus Healthcare branding and activating Healthcare workspace..."
 sudo docker compose exec -T backend bench --site frontend execute frappe.apply_branding.run
 sudo docker compose exec -T backend bench --site frontend clear-cache
 
@@ -100,7 +101,7 @@ echo ""
 echo "=========================================================="
 echo "  🎉 ORUS HEALTHCARE IS LIVE ON EC2!"
 echo "=========================================================="
-echo "  URL: http://$(curl -s http://checkip.amazonaws.com || curl -s https://api.ipify.org):8080"
+echo "  Direct Healthcare URL: http://$(curl -s http://checkip.amazonaws.com || curl -s https://api.ipify.org):8080/app/healthcare"
 echo "  Username: Administrator"
 echo "  Password: admin"
 echo "=========================================================="
