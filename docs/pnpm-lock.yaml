@@ -13,14 +13,14 @@ importers:
   .:
     devDependencies:
       mermaid:
-        specifier: 11.17.0
-        version: 11.17.0
+        specifier: 11.17.1
+        version: 11.17.1
       vitepress:
         specifier: 2.0.0-alpha.19
         version: 2.0.0-alpha.19(esbuild@0.27.7)(postcss@8.5.26)
       vitepress-mermaid-viewer:
         specifier: 0.5.0
-        version: 0.5.0(mermaid@11.17.0)(vitepress@2.0.0-alpha.19(esbuild@0.27.7)(postcss@8.5.26))(vue@3.5.41)
+        version: 0.5.0(mermaid@11.17.1)(vitepress@2.0.0-alpha.19(esbuild@0.27.7)(postcss@8.5.26))(vue@3.5.41)
       vitepress-sidebar:
         specifier: 1.39.0
         version: 1.39.0
@@ -1014,8 +1014,8 @@ packages:
   mdast-util-to-hast@13.2.1:
     resolution: {integrity: sha512-cctsq2wp5vTsLIcaymblUriiTcZd0CwWtCbLvrOzYCDZoWyMNV8sZ7krj09FSnsiJi3WVsHLM4k6Dq/yaPyCXA==}
 
-  mermaid@11.17.0:
-    resolution: {integrity: sha512-Jo9N377Wb4MSnHFPTbLi2SxFpsQl4eVHoxnW5U1Md9EazvgMp3s+4ohDxr81YNTgbn5Kj7HJ3yslrSJ52kwpbA==}
+  mermaid@11.17.1:
+    resolution: {integrity: sha512-G1BP6qU4BRwEGk2SdsxgDk1cSuApimT32Nkb52YRSv+856FrmB8qo28BaNk9Ee8Fvuon3OxpXDJ4L6cD5AykXg==}
 
   micromark-util-character@2.1.1:
     resolution: {integrity: sha512-wv8tdUTJ3thSFFFJKtpYKOYiGP2+v96Hvk4Tu8KpCAsTMs6yi+nVmGh1syvSCsaxz45J6Jbw+9DD6g97+NV67Q==}
@@ -2165,7 +2165,7 @@ snapshots:
       unist-util-visit: 5.1.0
       vfile: 6.0.3
 
-  mermaid@11.17.0:
+  mermaid@11.17.1:
     dependencies:
       '@braintree/sanitize-url': 7.1.2
       '@iconify/utils': 3.1.4
@@ -2393,9 +2393,9 @@ snapshots:
       esbuild: 0.27.7
       fsevents: 2.3.3
 
-  vitepress-mermaid-viewer@0.5.0(mermaid@11.17.0)(vitepress@2.0.0-alpha.19(esbuild@0.27.7)(postcss@8.5.26))(vue@3.5.41):
+  vitepress-mermaid-viewer@0.5.0(mermaid@11.17.1)(vitepress@2.0.0-alpha.19(esbuild@0.27.7)(postcss@8.5.26))(vue@3.5.41):
     dependencies:
-      mermaid: 11.17.0
+      mermaid: 11.17.1
       vitepress: 2.0.0-alpha.19(esbuild@0.27.7)(postcss@8.5.26)
       vue: 3.5.41
 
