@@ -1,7 +1,7 @@
 import frappe
 
 def run():
-    print("Applying Orus Healthcare branding, clean sidebar, and setting Healthcare as default workspace...")
+    print("Applying Orus Healthcare branding, permissions, and roles...")
     
     # 0. Ensure Domain Healthcare exists and is active in database
     try:
@@ -71,12 +71,32 @@ def run():
             frappe.db.set_value("Workspace", "Healthcare", "is_hidden", 0)
             frappe.db.set_value("Workspace", "Healthcare", "public", 1)
             frappe.db.set_value("Workspace", "Healthcare", "sequence_id", 1)
-            
-        print("Cleaned sidebar: Non-healthcare workspaces hidden.")
     except Exception as e:
         print(f"Workspace customization note: {e}")
     
-    # 4. Navbar Settings (Hide all Frappe external links)
+    # 4. Grant Full Healthcare Roles & Permissions to Users (including Orus-studio@gmail.com and Administrator)
+    try:
+        healthcare_roles = [
+            "System Manager", 
+            "Healthcare Administrator", 
+            "Physician", 
+            "Nursing User", 
+            "Laboratory User",
+            "Desk User"
+        ]
+        users = frappe.db.get_list("User", filters={"enabled": 1, "name": ["not in", ["Guest"]]}, pluck="name")
+        for u_email in users:
+            u_doc = frappe.get_doc("User", u_email)
+            for r in healthcare_roles:
+                if frappe.db.exists("Role", r):
+                    u_doc.add_roles(r)
+            u_doc.flags.ignore_mandatory = True
+            u_doc.save(ignore_permissions=True)
+        print("✅ Healthcare roles assigned to all active users.")
+    except Exception as e:
+        print(f"Role assignment note: {e}")
+
+    # 5. Navbar Settings (Hide all Frappe external links)
     try:
         nav_doc = frappe.get_doc("Navbar Settings")
         for item in (nav_doc.help_dropdown or []):
@@ -87,10 +107,10 @@ def run():
     except Exception as e:
         print(f"Navbar note: {e}")
 
-    # 5. Clear cache and commit
+    # 6. Clear cache and commit
     frappe.db.commit()
     frappe.clear_cache()
-    print("✅ Orus Healthcare configuration applied! Healthcare is now the primary workspace.")
+    print("✅ Full permissions and branding applied successfully!")
 
 if __name__ == "__main__":
     run()
