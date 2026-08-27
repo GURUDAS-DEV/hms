@@ -1,7 +1,7 @@
 import frappe
 
 def run():
-    print("Applying Orus Healthcare branding and configuring workspaces...")
+    print("Applying Orus Healthcare branding, clean sidebar, and setting Healthcare as default workspace...")
     
     # 0. Ensure Domain Healthcare exists and is active in database
     try:
@@ -18,7 +18,7 @@ def run():
     except Exception as e:
         print(f"Domain activation note: {e}")
     
-    # 1. System Settings (direct DB value set to bypass mandatory checks)
+    # 1. System Settings (Direct DB writes)
     try:
         frappe.db.set_single_value("System Settings", "app_name", "Orus Healthcare")
         frappe.db.set_single_value("System Settings", "app_logo_url", "/files/orus_logo.svg")
@@ -31,7 +31,7 @@ def run():
     except Exception as e:
         print(f"System Settings note: {e}")
     
-    # 2. Website Settings (direct DB value set)
+    # 2. Website Settings (Direct DB writes)
     try:
         frappe.db.set_single_value("Website Settings", "app_name", "Orus Healthcare")
         frappe.db.set_single_value("Website Settings", "app_logo", "/files/orus_logo.svg")
@@ -53,25 +53,30 @@ def run():
     except Exception as e:
         print(f"Website Settings note: {e}")
     
-    # 3. Clean Sidebar Workspaces (Hide non-healthcare clutter)
+    # 3. Clean Sidebar Workspaces (Hide ALL non-healthcare clutter)
     try:
-        workspaces_to_hide = [
-            'Manufacturing', 'Quality', 'Projects', 'Buying', 'Selling', 
-            'Stock', 'Assets', 'CRM', 'ERPNext Integrations', 'Support', 
-            'Integrations', 'Build', 'Tools', 'Website'
+        non_healthcare_workspaces = [
+            'Accounting', 'Buying', 'Selling', 'Stock', 'Assets', 
+            'Manufacturing', 'Quality', 'Projects', 'Support', 
+            'Website', 'CRM', 'Tools', 'ERPNext Settings', 'Integrations', 
+            'ERPNext Integrations', 'Build', 'Settings', 'Getting Started'
         ]
-        for ws in workspaces_to_hide:
+        for ws in non_healthcare_workspaces:
             if frappe.db.exists("Workspace", ws):
                 frappe.db.set_value("Workspace", ws, "is_hidden", 1)
+                frappe.db.set_value("Workspace", ws, "public", 0)
                 
-        # Make sure Healthcare workspace is visible and active
+        # Make Healthcare the primary visible Workspace
         if frappe.db.exists("Workspace", "Healthcare"):
             frappe.db.set_value("Workspace", "Healthcare", "is_hidden", 0)
             frappe.db.set_value("Workspace", "Healthcare", "public", 1)
+            frappe.db.set_value("Workspace", "Healthcare", "sequence_id", 1)
+            
+        print("Cleaned sidebar: Non-healthcare workspaces hidden.")
     except Exception as e:
         print(f"Workspace customization note: {e}")
     
-    # 4. Navbar Settings (Hide all frappe external links)
+    # 4. Navbar Settings (Hide all Frappe external links)
     try:
         nav_doc = frappe.get_doc("Navbar Settings")
         for item in (nav_doc.help_dropdown or []):
@@ -85,7 +90,7 @@ def run():
     # 5. Clear cache and commit
     frappe.db.commit()
     frappe.clear_cache()
-    print("✅ All Orus Healthcare branding, Healthcare workspace, and clean sidebar applied!")
+    print("✅ Orus Healthcare configuration applied! Healthcare is now the primary workspace.")
 
 if __name__ == "__main__":
     run()
